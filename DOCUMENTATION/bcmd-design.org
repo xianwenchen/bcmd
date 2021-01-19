@@ -1,0 +1,168 @@
+#+title: The Design of bcmd
+#+author: Xianwen Chen
+
+bcmd is a shell script that runs a command and emails the output to an email address.
+
+It is a shell script.
+
+A working local smtp server is required.
+
+bcmd starts with a shebang.
+
+#+name: shebang
+#+begin_src sh :exports codes :eval no
+#!/bin/sh
+#+end_src
+
+bcmd saves the log file in /tmp by user name.
+It needs to know the user name.
+
+#+name: get-username
+#+begin_src sh :exports codes :eval no
+user=$(whoami)
+#+end_src
+
+bcmd takes two parameters.
+The _t_ parameter takes the email address that the output will be sent to.
+The _c_ parameter takes the command.
+
+#+name: readparameters
+#+begin_src sh :exports codes :eval no
+while getopts t:c: flag
+do
+    case "${flag}" in
+        t) mailto=${OPTARG};;
+        c) cmd=${OPTARG};;
+    esac
+done
+echo "Mail to: $mailto";
+echo "Command: $cmd";
+#+end_src
+
+bcmd sets the output files, which include an email file and the command file.
+The email follows the structure of an email that /sendmail/ would take.
+It includes a subject line, while the rest is the output from the command.
+
+#+name: outputfiles-setup
+#+begin_src sh :exports codes :eval no
+echo 0; \
+    email_file=/tmp/bcmd-$user-email-$(date +%s%N).txt; \
+    cmd_file=/tmp/bcmd-$user-cmd-$(date +%s%N).txt; \
+#+end_src
+
+Echo the subject line to the email file.
+In the email body, echo the date.
+Run the command, of which the output is added to the email body.
+
+#+name: outputfile-email
+#+begin_src sh :exports codes :eval no
+echo 1; \
+echo "Subject: bash output: $cmd" >> $email_file; \
+echo "" >> $email_file; \
+echo 2; \
+date >> $email_file; \
+    echo 3; \
+    echo $cmd > $cmd_file; \
+    chmod +x $cmd_file; \
+    bash $cmd_file >> $email_file; \
+#+end_src
+
+Send the email.
+
+#+name: sendmail
+#+begin_src sh :exports codes :eval no
+echo 4; \
+sendmail -v $mailto < $email_file; \
+#+end_src
+
+Move the email and command files, so that five last histories are kep.
+
+#+name: outputfiles-save
+#+begin_src sh :exports codes :eval no
+echo 5; \
+log_bak_5=/tmp/bcmd-$user-log-bak-5.txt; \
+cmd_bak_5=/tmp/bcmd-$user-cmd-bak-5.txt; \
+echo 6; \
+log_bak_4=/tmp/bcmd-$user-log-bak-4.txt; \
+cmd_bak_4=/tmp/bcmd-$user-cmd-bak-4.txt; \
+echo 7; \
+log_bak_3=/tmp/bcmd-$user-log-bak-3.txt; \
+cmd_bak_3=/tmp/bcmd-$user-cmd-bak-3.txt; \
+echo 8; \
+log_bak_2=/tmp/bcmd-$user-log-bak-2.txt; \
+cmd_bak_2=/tmp/bcmd-$user-cmd-bak-2.txt; \
+echo 9; \
+log_bak_1=/tmp/bcmd-$user-log-bak-1.txt; \
+cmd_bak_1=/tmp/bcmd-$user-cmd-bak-1.txt; \
+echo 10; \
+if [ -e $log_bak_4 ]; then
+    mv $log_bak_4 $log_bak_5
+fi; \
+if [ -e $cmd_bak_4 ]; then
+    mv $cmd_bak_4 $cmd_bak_5
+fi; \
+echo 11; \
+if [ -e $log_bak_3 ]; then
+    mv $log_bak_3 $log_bak_4
+fi; \
+if [ -e $cmd_bak_3 ]; then
+    mv $cmd_bak_3 $cmd_bak_4
+fi; \
+echo 12; \
+if [ -e $log_bak_2 ]; then
+    mv $log_bak_2 $log_bak_3
+fi; \
+if [ -e $cmd_bak_2 ]; then
+    mv $cmd_bak_2 $cmd_bak_3
+fi; \
+echo 13; \
+if [ -e $log_bak_1 ]; then
+    mv $log_bak_1 $log_bak_2
+fi; \
+if [ -e $cmd_bak_1 ]; then
+    mv $cmd_bak_1 $cmd_bak_2
+fi; \
+echo 14; \
+mv $email_file $log_bak_1; \
+mv $cmd_file $cmd_bak_1; \
+#+end_src
+
+List the output files.
+Echo the current time before ending the program.
+
+#+name: end
+#+begin_src sh :exports codes :eval no
+echo 15; \
+ls -alh /tmp/bcmd-$user* ; \
+echo 16; \
+date;
+#+end_src
+
+Put every piece together.
+Tangle it to ../bcmd.
+
+#+name: pxl
+#+begin_src sh :tangle ../bcmd :exports codes :eval no :noweb yes
+<<shebang>>
+
+<<get-username>>
+
+<<readparameters>>
+
+<<outputfiles-setup>>
+
+<<outputfile-email>>
+
+<<sendmail>>
+
+<<outputfiles-save>>
+
+<<end>>
+#+end_src
+
+../bcmd needs to be executable.
+The code below is executed, when this org document is exported, which sets ../bcmd to be executable.
+
+#+BEGIN_SRC sh :exports both
+chmod +x ../bcmd
+#+END_SRC

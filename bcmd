@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 user=$(whoami)
 
 while getopts t:c: flag
@@ -14,6 +15,7 @@ echo "Command: $cmd";
 echo 0; \
     email_file=/tmp/bcmd-$user-email-$(date +%s%N).txt; \
     cmd_file=/tmp/bcmd-$user-cmd-$(date +%s%N).txt; \
+
 echo 1; \
 echo "Subject: bash output: $cmd" >> $email_file; \
 echo "" >> $email_file; \
@@ -23,8 +25,10 @@ date >> $email_file; \
     echo $cmd > $cmd_file; \
     chmod +x $cmd_file; \
     bash $cmd_file >> $email_file; \
+
 echo 4; \
 sendmail -v $mailto < $email_file; \
+
 echo 5; \
 log_bak_5=/tmp/bcmd-$user-log-bak-5.txt; \
 cmd_bak_5=/tmp/bcmd-$user-cmd-bak-5.txt; \
@@ -71,7 +75,8 @@ fi; \
 echo 14; \
 mv $email_file $log_bak_1; \
 mv $cmd_file $cmd_bak_1; \
+
 echo 15; \
-ls /tmp/bcmd* ; \
+ls -alh /tmp/bcmd-$user* ; \
 echo 16; \
 date;
