@@ -1,0 +1,22 @@
+#+title: bcmd
+#+author: Xianwen Chen
+
+bcmd is a shell script that runs a command and emails the output to an email address.
+
+I no longer remember what bcmd standed for when I named it.
+Maybe I meant to mean batch command?
+
+bcmd takes two parameters.
+The _t_ parameter takes the email address that the output will be sent to.
+The _c_ parameter takes the command.
+
+Below is the example, if you would like to lock your computer screen every 10 minutes.
+
+#+BEGIN_SRC sh :eval no
+bcmd -t someone@localhost -c "ls /"
+#+END_SRC
+
+The source code is written in the literate programming style.
+See [[file:DOCUMENTATION/bcmd-design.org]].
+
+bcmd is licensed under GPL version 2.
