@@ -64,7 +64,7 @@ date >> $email_file; \
     echo 3; \
     echo $cmd > $cmd_file; \
     chmod +x $cmd_file; \
-    bash $cmd_file >> $email_file; \
+    bash $cmd_file 2>&1 >> $email_file; \
 #+end_src
 
 Send the email.

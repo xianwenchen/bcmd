@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-01-19 Tue 11:09 -->
+<!-- 2021-04-14 Wed 07:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The Design of bcmd</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -194,50 +194,26 @@
   /*]]>*/-->
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -260,7 +236,7 @@ bcmd starts with a shebang.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org89f1e0d"><span style="color: #b22222;">#</span><span style="color: #b22222;">!/bin/</span><span style="color: #a020f0;">sh</span>
+<pre class="src src-sh" id="orgf91b5b2"><span style="color: #b22222;">#</span><span style="color: #b22222;">!/bin/</span><span style="color: #a020f0;">sh</span>
 </pre>
 </div>
 
@@ -270,7 +246,7 @@ It needs to know the user name.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org43f812d"><span style="color: #a0522d;">user</span>=$(whoami)
+<pre class="src src-sh" id="orgbf20156"><span style="color: #a0522d;">user</span>=$(whoami)
 </pre>
 </div>
 
@@ -281,7 +257,7 @@ The <span class="underline">c</span> parameter takes the command.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org6c3d8b9"><span style="color: #a020f0;">while </span><span style="color: #483d8b;">getopts</span> t:c: flag
+<pre class="src src-sh" id="org50fa680"><span style="color: #a020f0;">while </span><span style="color: #483d8b;">getopts</span> t:c: flag
 <span style="color: #a020f0;">do</span>
     <span style="color: #a020f0;">case</span> <span style="color: #8b2252;">"${flag}"</span><span style="color: #a020f0;"> in</span>
         t) <span style="color: #a0522d;">mailto</span>=${<span style="color: #a0522d;">OPTARG</span>};;
@@ -300,7 +276,7 @@ It includes a subject line, while the rest is the output from the command.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgf2f4a6f"><span style="color: #483d8b;">echo</span> 0; <span style="color: #8b2252;">\</span>
+<pre class="src src-sh" id="orga958232"><span style="color: #483d8b;">echo</span> 0; <span style="color: #8b2252;">\</span>
     <span style="color: #a0522d;">email_file</span>=/tmp/bcmd-$<span style="color: #a0522d;">user</span>-email-$(date +%s%N).txt; <span style="color: #8b2252;">\</span>
     <span style="color: #a0522d;">cmd_file</span>=/tmp/bcmd-$<span style="color: #a0522d;">user</span>-cmd-$(date +%s%N).txt; <span style="color: #8b2252;">\</span>
 </pre>
@@ -313,7 +289,7 @@ Run the command, of which the output is added to the email body.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org46a6066"><span style="color: #483d8b;">echo</span> 1; <span style="color: #8b2252;">\</span>
+<pre class="src src-sh" id="org0af843d"><span style="color: #483d8b;">echo</span> 1; <span style="color: #8b2252;">\</span>
 <span style="color: #483d8b;">echo</span> <span style="color: #8b2252;">"Subject: bash output: $cmd"</span> &gt;&gt; $<span style="color: #a0522d;">email_file</span>; <span style="color: #8b2252;">\</span>
 <span style="color: #483d8b;">echo</span> <span style="color: #8b2252;">""</span> &gt;&gt; $<span style="color: #a0522d;">email_file</span>; <span style="color: #8b2252;">\</span>
 <span style="color: #483d8b;">echo</span> 2; <span style="color: #8b2252;">\</span>
@@ -321,7 +297,7 @@ date &gt;&gt; $<span style="color: #a0522d;">email_file</span>; <span style="col
     <span style="color: #483d8b;">echo</span> 3; <span style="color: #8b2252;">\</span>
     <span style="color: #483d8b;">echo</span> $<span style="color: #a0522d;">cmd</span> &gt; $<span style="color: #a0522d;">cmd_file</span>; <span style="color: #8b2252;">\</span>
     chmod +x $<span style="color: #a0522d;">cmd_file</span>; <span style="color: #8b2252;">\</span>
-    bash $<span style="color: #a0522d;">cmd_file</span> &gt;&gt; $<span style="color: #a0522d;">email_file</span>; <span style="color: #8b2252;">\</span>
+    bash $<span style="color: #a0522d;">cmd_file</span> 2&gt;&amp;1 &gt;&gt; $<span style="color: #a0522d;">email_file</span>; <span style="color: #8b2252;">\</span>
 </pre>
 </div>
 
@@ -330,7 +306,7 @@ Send the email.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgf689952"><span style="color: #483d8b;">echo</span> 4; <span style="color: #8b2252;">\</span>
+<pre class="src src-sh" id="orgfd4da7b"><span style="color: #483d8b;">echo</span> 4; <span style="color: #8b2252;">\</span>
 sendmail -v $<span style="color: #a0522d;">mailto</span> &lt; $<span style="color: #a0522d;">email_file</span>; <span style="color: #8b2252;">\</span>
 </pre>
 </div>
@@ -340,7 +316,7 @@ Move the email and command files, so that five last histories are kep.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgbb52dbd"><span style="color: #483d8b;">echo</span> 5; <span style="color: #8b2252;">\</span>
+<pre class="src src-sh" id="org937b743"><span style="color: #483d8b;">echo</span> 5; <span style="color: #8b2252;">\</span>
 <span style="color: #a0522d;">log_bak_5</span>=/tmp/bcmd-$<span style="color: #a0522d;">user</span>-log-bak-5.txt; <span style="color: #8b2252;">\</span>
 <span style="color: #a0522d;">cmd_bak_5</span>=/tmp/bcmd-$<span style="color: #a0522d;">user</span>-cmd-bak-5.txt; <span style="color: #8b2252;">\</span>
 <span style="color: #483d8b;">echo</span> 6; <span style="color: #8b2252;">\</span>
@@ -395,7 +371,7 @@ Echo the current time before ending the program.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org257dd70"><span style="color: #483d8b;">echo</span> 15; <span style="color: #8b2252;">\</span>
+<pre class="src src-sh" id="org337e512"><span style="color: #483d8b;">echo</span> 15; <span style="color: #8b2252;">\</span>
 ls -alh /tmp/bcmd-$<span style="color: #a0522d;">user</span>* ; <span style="color: #8b2252;">\</span>
 <span style="color: #483d8b;">echo</span> 16; <span style="color: #8b2252;">\</span>
 date;
@@ -408,7 +384,7 @@ Tangle it to ../bcmd.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="org483abdf">&lt;&lt;shebang&gt;&gt;
+<pre class="src src-sh" id="org0a65d5b">&lt;&lt;shebang&gt;&gt;
 
 &lt;&lt;get-username&gt;&gt;
 
@@ -438,8 +414,8 @@ The code below is executed, when this org document is exported, which sets ../bc
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Xianwen Chen</p>
-<p class="date">Created: 2021-01-19 Tue 11:09</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-04-14 Wed 07:47</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
